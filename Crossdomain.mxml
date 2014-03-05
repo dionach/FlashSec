@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?> 
+
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+
+xmlns:s="library://ns.adobe.com/flex/spark" 
+
+xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"> 
+
+<fx:Script> 
+
+<![CDATA[
+
+import flash.display.Sprite;
+import flash.events.*;
+import flash.net.*;
+import mx.controls.Alert;
+import flash.external.ExternalInterface;
+        
+        var loader:URLLoader = new URLLoader();
+		[Bindable] public var html:String = "";
+		
+		public static function getHtmlParameters(queryString:String):String {
+			var param:String = ExternalInterface.call("window.location.search.toString");
+			if(!param) return '';
+			 
+			param=param.replace("\?", "&");
+			var paramArray:Array = param.split('&');
+			for(var x:int = 0; x<paramArray.length; x++) {
+			var splitArray:Array = paramArray[x].split('=');
+			 
+			var name:String = splitArray[0];
+			var value:String = splitArray[1];
+			 
+			if(queryString == name) return value;
+			}
+			 
+			return '';
+		}
+				
+        public function URLLoaderExample():void {
+            loader = new URLLoader();
+            configureListeners(loader);
+	
+			var url:String = getHtmlParameters("url");
+			ExternalInterface.call("alert", "Making request to: " + url);
+				
+            var request:URLRequest = new URLRequest(url);
+            try {
+                loader.load(request);
+            } catch (error:Error) {
+                trace("Unable to load requested document.");
+            }
+        }
+
+        private function configureListeners(dispatcher:IEventDispatcher):void {
+            dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+            dispatcher.addEventListener(Event.OPEN, openHandler);
+            dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+            dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+            dispatcher.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+            dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        }
+
+        private function completeHandler(event:Event):void {
+            var loader:URLLoader = URLLoader(event.target);
+            html = loader.data;
+                
+        }
+
+        private function openHandler(event:Event):void {
+            trace("openHandler: " + event);
+        }
+
+        private function progressHandler(event:ProgressEvent):void {
+            trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+        }
+
+        private function securityErrorHandler(event:SecurityErrorEvent):void {
+            trace("securityErrorHandler: " + event);
+        }
+
+        private function httpStatusHandler(event:HTTPStatusEvent):void {
+            trace("httpStatusHandler: " + event);
+        }
+
+        private function ioErrorHandler(event:IOErrorEvent):void {
+            trace("ioErrorHandler: " + event);
+        }
+
+
+]]> 
+
+</fx:Script> 
+
+<s:TextArea text="{html}"  width="500" height="400" x="10" y="10"/> 
+
+
+<s:Button label="call" click="URLLoaderExample()"  x="10" y="430"/> 
+
+</s:Application>
