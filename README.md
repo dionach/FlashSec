@@ -9,7 +9,7 @@ This repository aims to compile scripts and tools that can be used during penetr
 
 - Crossdomain.mxml: 
 Script written in FLEX that exploits permissive *crossdomain flash policy files* to make arbitrary requests to the target website.
-To compile just download the FLEX SDK -available at http://www.adobe.com/devnet/flex/flex-sdk-download.html- and use *mxmlc*:
+To compile just download the FLEX SDK (available at http://www.adobe.com/devnet/flex/flex-sdk-download.html) and use *mxmlc*:
 
 ```
 $ ./mxmlc Crossdomain.mxml
@@ -20,7 +20,7 @@ The script expects a *url* parameter pointing to the vulnerable site, i.e.: http
 
 - BrowserCookies.as and Index.as:
 Script written in Action Script to *read the cookies* of the website where the file is hosted at using flash.
-To compile just download the FLEX SDK -available at http://www.adobe.com/devnet/flex/flex-sdk-download.html- and use *mxmlc* (make sure both files are in the same folder):
+To compile just download the FLEX SDK (available at http://www.adobe.com/devnet/flex/flex-sdk-download.html) and use *mxmlc* (make sure both files are in the same folder):
 
 ```
 $ ./mxmlc Index.as
