@@ -42,22 +42,14 @@ import flash.external.ExternalInterface;
             configureListeners(loader);
 	
 			var url:String = getHtmlParameters("url");
-			url = url_input1.text;
-			var post:String = url_input2.text;
-			var request:URLRequest = new URLRequest(url);
-			if (post) {
-				ExternalInterface.call("alert", "Making POST request to: " + url);
-				request.method = URLRequestMethod.POST;
-				request.data = post;
-				}
-			else {
-				ExternalInterface.call("alert", "Making GET request to: " + url);
-			}
-			try {
-				loader.load(request);
-			} catch (error:Error) {
-				trace("Unable to load requested document.");
-			}
+			ExternalInterface.call("alert", "Making request to: " + url);
+				
+            var request:URLRequest = new URLRequest(url);
+            try {
+                loader.load(request);
+            } catch (error:Error) {
+                trace("Unable to load requested document.");
+            }
         }
 
         private function configureListeners(dispatcher:IEventDispatcher):void {
@@ -100,12 +92,9 @@ import flash.external.ExternalInterface;
 
 </fx:Script> 
 
-<s:TextInput id="url_input1" text="[URL] ex: http://www.example.com/?id=1" width="500" x="10" y="0"/>
+<s:TextArea text="{html}"  width="500" height="400" x="10" y="10"/> 
 
-<s:TextInput id="url_input2" text="[POST] ex: test=1 (delete text for GET requests)" width="500" x="10" y="30"/>
 
-<s:TextArea text="Result &#13; {html}"  width="500" height="400" x="10" y="60"/> 
-
-<s:Button label="Send" click="URLLoaderExample()"  x="10" y="470"/> 
+<s:Button label="call" click="URLLoaderExample()"  x="10" y="430"/> 
 
 </s:Application>
