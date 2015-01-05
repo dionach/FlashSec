@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?> 
+
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+
+xmlns:s="library://ns.adobe.com/flex/spark" 
+
+xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"> 
+
+<fx:Script> 
+
+<![CDATA[
+
+import flash.display.Sprite;
+import flash.events.*;
+import flash.net.*;
+import mx.controls.Alert;
+import flash.external.ExternalInterface;
+        
+        var loader:URLLoader = new URLLoader();
+		[Bindable] public var html:String = "";
+				
+        public function URLLoaderExample():void {
+            loader = new URLLoader();
+            configureListeners(loader);
+	
+			var url:String = url_input1.text;
+			var post:String = url_input2.text;
+			var request:URLRequest = new URLRequest(url);
+			if (post) {
+				ExternalInterface.call("alert", "Making POST request to: " + url);
+				request.method = URLRequestMethod.POST;
+				request.data = post;
+				}
+			else {
+				ExternalInterface.call("alert", "Making GET request to: " + url);
+			}
+			try {
+				loader.load(request);
+			} catch (error:Error) {
+				trace("Unable to load requested document.");
+			}
+        }
+
+        private function configureListeners(dispatcher:IEventDispatcher):void {
+            dispatcher.addEventListener(Event.COMPLETE, completeHandler);
+            dispatcher.addEventListener(Event.OPEN, openHandler);
+            dispatcher.addEventListener(ProgressEvent.PROGRESS, progressHandler);
+            dispatcher.addEventListener(SecurityErrorEvent.SECURITY_ERROR, securityErrorHandler);
+            dispatcher.addEventListener(HTTPStatusEvent.HTTP_STATUS, httpStatusHandler);
+            dispatcher.addEventListener(IOErrorEvent.IO_ERROR, ioErrorHandler);
+        }
+
+        private function completeHandler(event:Event):void {
+            var loader:URLLoader = URLLoader(event.target);
+            html = loader.data;
+                
+        }
+
+        private function openHandler(event:Event):void {
+            trace("openHandler: " + event);
+        }
+
+        private function progressHandler(event:ProgressEvent):void {
+            trace("progressHandler loaded:" + event.bytesLoaded + " total: " + event.bytesTotal);
+        }
+
+        private function securityErrorHandler(event:SecurityErrorEvent):void {
+            trace("securityErrorHandler: " + event);
+        }
+
+        private function httpStatusHandler(event:HTTPStatusEvent):void {
+            trace("httpStatusHandler: " + event);
+        }
+
+        private function ioErrorHandler(event:IOErrorEvent):void {
+            trace("ioErrorHandler: " + event);
+        }
+
+
+]]> 
+
+</fx:Script> 
+
+<s:TextInput id="url_input1" text="[URL] ex: http://www.example.com/?id=1" width="500" x="10" y="0"/>
+
+<s:TextInput id="url_input2" text="[POST] ex: test=1 (delete text for GET requests)" width="500" x="10" y="30"/>
+
+<s:TextArea text="Result &#13; {html}"  width="500" height="400" x="10" y="60"/> 
+
+<s:Button label="Send" click="URLLoaderExample()"  x="10" y="470"/> 
+
+</s:Application>
